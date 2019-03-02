@@ -1,5 +1,8 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import './chat_list.dart';
+
+final chatRadius = 15.0;
 
 class ChatRoom extends StatelessWidget {
   final ChatItem chatItem;
@@ -52,53 +55,55 @@ class ChatRoom extends StatelessWidget {
       ],
     );
 
+    final roundedInput = Container(
+      color: Colors.white,
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 8.0,
+          ),
+          Icon(
+            Icons.insert_emoticon,
+            size: 30.0,
+            color: Theme.of(context).hintColor,
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: 'Type a message',
+                border: InputBorder.none,
+              ),
+            ),
+          ),
+          Icon(
+            Icons.attach_file,
+            size: 30.0,
+            color: Theme.of(context).hintColor,
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+          Icon(
+            Icons.camera_alt,
+            size: 30.0,
+            color: Theme.of(context).hintColor,
+          ),
+          SizedBox(
+            width: 8.0,
+          ),
+        ],
+      ),
+    );
+
     final bottomBar = Row(
       children: <Widget>[
         Expanded(
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20.0),
-            child: Container(
-              color: Colors.white,
-              child: Row(
-                children: <Widget>[
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  Icon(
-                    Icons.insert_emoticon,
-                    size: 30.0,
-                    color: Theme.of(context).hintColor,
-                  ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Type a message',
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    Icons.attach_file,
-                    size: 30.0,
-                    color: Theme.of(context).hintColor,
-                  ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  Icon(
-                    Icons.camera_alt,
-                    size: 30.0,
-                    color: Theme.of(context).hintColor,
-                  ),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                ],
-              ),
-            ),
+            child: roundedInput,
           ),
         ),
         SizedBox(
@@ -118,16 +123,23 @@ class ChatRoom extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(15.0),
-                  child: ClipPath(
-                    clipper: MessageClipper(),
-                    child: Container(
-                      color: Colors.red,
-                      padding: EdgeInsets.all(8.0),
-                      child: Text('hihihihii'),
-                    ),
-                  ),
+                child: Column(
+                  children: <Widget>[
+                    Text('hi'),
+                    Text('hihihi'),
+                    ClipPath(
+                      clipper: ClipRTriangle(),
+                      child: ClipRRect(
+                        borderRadius:
+                            BorderRadius.all(Radius.circular(chatRadius)),
+                        child: Container(
+                          height: 100.0,
+                          width: 100.0,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
             ),
@@ -142,18 +154,27 @@ class ChatRoom extends StatelessWidget {
   }
 }
 
-class MessageClipper extends CustomClipper<Path> {
+class ClipRTriangle extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(size.width, 0.0);
+    path.lineTo(0.0, chatRadius);
+    path.lineTo(chatRadius, chatRadius + chatRadius / 2);
+
+    path.lineTo(chatRadius, size.height - chatRadius);
+
+    path.lineTo(chatRadius * 2, size.height);
+    // path.lineTo(chatRadius, size.height);
+
     path.lineTo(size.width, size.height);
-    path.lineTo(10.0, size.height);
-    path.lineTo(10.0, 10.0);
+    path.lineTo(size.width, 0.0);
+
     path.close();
     return path;
   }
 
   @override
-  bool shouldReclip(MessageClipper oldClipper) => false;
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return true;
+  }
 }
