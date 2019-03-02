@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import './chat_list.dart';
 
-final chatRadius = 15.0;
+final chatRadius = 5.0;
 
 class ChatRoom extends StatelessWidget {
   final ChatItem chatItem;
@@ -133,8 +133,8 @@ class ChatRoom extends StatelessWidget {
                         borderRadius:
                             BorderRadius.all(Radius.circular(chatRadius)),
                         child: Container(
-                          height: 100.0,
-                          width: 100.0,
+                          height: 30.0,
+                          width: 50.0,
                           color: Colors.redAccent,
                         ),
                       ),
