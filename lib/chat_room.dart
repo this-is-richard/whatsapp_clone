@@ -163,7 +163,13 @@ class ClipRTriangle extends CustomClipper<Path> {
 
     path.lineTo(chatRadius, size.height - chatRadius);
 
-    path.lineTo(chatRadius * 2, size.height);
+    path.conicTo(
+        chatRadius * 2 - chatRadius * sin(0.785),
+        size.height - (chatRadius - chatRadius * cos(0.785)),
+        chatRadius * 2,
+        size.height,
+        1);
+    // path.lineTo(chatRadius * 2, size.height);
     // path.lineTo(chatRadius, size.height);
 
     path.lineTo(size.width, size.height);
