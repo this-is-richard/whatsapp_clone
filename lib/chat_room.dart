@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import './chat_list.dart';
-import './clip_r_triangle.dart';
-
-final chatRadius = 5.0;
+import './chat_thread.dart';
 
 class ChatRoom extends StatelessWidget {
   final ChatItem chatItem;
@@ -125,20 +123,7 @@ class ChatRoom extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: <Widget>[
-                    Text('hi'),
-                    Text('hihihi'),
-                    ClipPath(
-                      clipper: ClipRTriangle(chatRadius),
-                      child: ClipRRect(
-                        borderRadius:
-                            BorderRadius.all(Radius.circular(chatRadius)),
-                        child: Container(
-                          height: 30.0,
-                          width: 100.0,
-                          color: Colors.redAccent,
-                        ),
-                      ),
-                    )
+                    ChatThread('Aloha !'),
                   ],
                 ),
               ),
