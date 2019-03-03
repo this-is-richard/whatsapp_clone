@@ -53,9 +53,10 @@ class ChatThread extends StatelessWidget {
 class _LeftThread extends StatelessWidget {
   final String message;
   final Color backgroundColor;
-  final r = 5.0;
+  final double r;
 
-  _LeftThread(this.message, {this.backgroundColor = Colors.white});
+  _LeftThread(this.message,
+      {this.r = 2.5, this.backgroundColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
@@ -80,9 +81,10 @@ class _LeftThread extends StatelessWidget {
 class _RightThread extends StatelessWidget {
   final String message;
   final Color backgroundColor;
-  final r = 5.0;
+  final double r;
 
-  _RightThread(this.message, {this.backgroundColor = Colors.white});
+  _RightThread(this.message,
+      {this.r = 2.5, this.backgroundColor = Colors.white});
 
   @override
   Widget build(BuildContext context) {
