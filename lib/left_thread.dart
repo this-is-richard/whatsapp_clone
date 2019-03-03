@@ -15,9 +15,13 @@ class LeftThread extends StatelessWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(r)),
         child: Container(
+          constraints: BoxConstraints.loose(MediaQuery.of(context).size * 0.8),
           padding: EdgeInsets.fromLTRB(8.0 + 2 * r, 8.0, 8.0, 8.0),
           color: this.backgroundColor,
-          child: Text(this.message),
+          child: Text(
+            this.message,
+            softWrap: true,
+          ),
         ),
       ),
     );

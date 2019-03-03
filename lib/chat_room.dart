@@ -3,6 +3,7 @@ import './chat_list.dart';
 import './left_thread.dart';
 import './right_thread.dart';
 import './model/thread.dart';
+import './round_input.dart';
 
 class ChatRoom extends StatefulWidget {
   final ChatItem chatItem;
@@ -23,67 +24,12 @@ class _ChatRoomState extends State<ChatRoom> {
     Thread(fromSelf: true, message: '好'),
   ];
 
-  _buildThreads(BuildContext context) {
-    final spacer = SizedBox(
-      height: 10.0,
-    );
-    final List<Widget> produce = [
-      // spacer,
-    ];
-
-    _threads.forEach((thread) {
-      if (thread.fromSelf == true) {
-        produce.add(Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              RightThread(
-                thread.message,
-                backgroundColor: Theme.of(context).indicatorColor,
-              ),
-            ],
-          ),
-        ));
-      } else {
-        produce.add(Container(
-          padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              LeftThread(
-                thread.message,
-                backgroundColor: Theme.of(context).accentColor,
-              ),
-            ],
-          ),
-        ));
-      }
-
-      // produce.add(spacer);
-    });
-
-    return produce;
-  }
-
-  _handleSubmitted(String text) {
-    _textController.clear();
-    setState(() {
-      _threads.add(Thread(
-        fromSelf: true,
-        message: text,
-      ));
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  _buildAppBar() {
     final avatarRadius = 20.0;
     final defaultIconButtonPadding = 8.0;
     final leftOffset = -25.0;
     final titleLineHeight = 2.0;
-
-    final appBar = AppBar(
+    return AppBar(
       title: SizedBox(
         width: double.infinity,
         child: Stack(
@@ -121,127 +67,101 @@ class _ChatRoomState extends State<ChatRoom> {
         ),
       ],
     );
+  }
 
-    final roundedInput = Container(
-      color: Colors.white,
+  _buildBottomBar() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: <Widget>[
-          SizedBox(
-            width: 8.0,
-          ),
-          Icon(
-            Icons.insert_emoticon,
-            size: 30.0,
-            color: Theme.of(context).hintColor,
-          ),
-          SizedBox(
-            width: 8.0,
-          ),
           Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Type a message',
-                border: InputBorder.none,
-              ),
-              controller: _textController,
-              onSubmitted: _handleSubmitted,
+            child: RoundInput(
+              textController: _textController,
+              handleSubmitted: _handleSubmitted,
             ),
           ),
-          Icon(
-            Icons.attach_file,
-            size: 30.0,
-            color: Theme.of(context).hintColor,
-          ),
           SizedBox(
-            width: 8.0,
+            width: 5.0,
           ),
-          Icon(
-            Icons.camera_alt,
-            size: 30.0,
-            color: Theme.of(context).hintColor,
-          ),
-          SizedBox(
-            width: 8.0,
+          GestureDetector(
+            onTap: () => _handleSubmitted(_textController.text),
+            child: CircleAvatar(
+              child: Icon(Icons.mic),
+            ),
           ),
         ],
       ),
     );
+  }
 
-    final bottomBar = Row(
-      children: <Widget>[
-        Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20.0),
-            child: roundedInput,
-          ),
-        ),
-        SizedBox(
-          width: 5.0,
-        ),
-        GestureDetector(
-          onTap: () => _handleSubmitted(_textController.text),
-          child: CircleAvatar(
-            child: Icon(Icons.mic),
-          ),
-        ),
-      ],
+  _buildMessageDisplay() {
+    return ListView.builder(
+      itemCount: _threads.length,
+      reverse: true,
+      itemBuilder: (context, index) {
+        final thread = _threads.reversed.toList()[index];
+        final spacer = SizedBox(
+          height: 8.0,
+        );
+        final List<Widget> children = [spacer];
+
+        if (thread.fromSelf == true) {
+          children.add(Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                RightThread(
+                  thread.message,
+                  backgroundColor: Theme.of(context).indicatorColor,
+                ),
+              ],
+            ),
+          ));
+        } else {
+          children.add(Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                LeftThread(
+                  thread.message,
+                  backgroundColor: Theme.of(context).accentColor,
+                ),
+              ],
+            ),
+          ));
+        }
+
+        return Column(
+          children: children,
+        );
+      },
     );
+  }
 
+  _handleSubmitted(String text) {
+    _textController.clear();
+    setState(() {
+      _threads.add(Thread(
+        fromSelf: true,
+        message: text,
+      ));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFECE5DD),
-      appBar: appBar,
+      appBar: _buildAppBar(),
       body: Center(
         child: Column(
           children: <Widget>[
             Expanded(
-              child: ListView.builder(
-                itemCount: _threads.length,
-                reverse: true,
-                itemBuilder: (context, index) {
-                  final thread = _threads.reversed.toList()[index];
-                  final spacer = SizedBox(
-                    height: 8.0,
-                  );
-                  final List<Widget> children = [spacer];
-
-                  if (thread.fromSelf == true) {
-                    children.add(Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          RightThread(
-                            thread.message,
-                            backgroundColor: Theme.of(context).indicatorColor,
-                          ),
-                        ],
-                      ),
-                    ));
-                  } else {
-                    children.add(Container(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          LeftThread(
-                            thread.message,
-                            backgroundColor: Theme.of(context).accentColor,
-                          ),
-                        ],
-                      ),
-                    ));
-                  }
-
-                  return Column(
-                    children: children,
-                  );
-                },
-              ),
+              child: _buildMessageDisplay(),
             ),
-            Container(
-              padding: EdgeInsets.symmetric(vertical: 8.0),
-              child: bottomBar,
-            )
+            _buildBottomBar(),
           ],
         ),
       ),
