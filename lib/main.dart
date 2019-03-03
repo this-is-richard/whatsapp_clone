@@ -10,6 +10,7 @@ class WhatsAppClone extends StatelessWidget {
       title: 'WhatsApp',
       theme: ThemeData(
         primaryColor: Color(0xff075e54),
+        accentColor: Theme.of(context).accentColor,
         indicatorColor: Colors.white,
         primaryColorDark: Color(0xFF128C7E),
         primaryIconTheme: IconThemeData(

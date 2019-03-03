@@ -1,11 +1,41 @@
 import 'package:flutter/material.dart';
 import './chat_list.dart';
-import './chat_thread.dart';
+import './clipped_thread.dart';
+
+final _threads = [
+  {'fromSelf': false, 'message': 'Aloha !'},
+  {'fromSelf': false, 'message': 'Nei dim ah'},
+  {'fromSelf': false, 'message': 'lets hang out a bit ?'},
+];
 
 class ChatRoom extends StatelessWidget {
   final ChatItem chatItem;
 
   ChatRoom(this.chatItem);
+
+  buildThreads() {
+    final spacer = SizedBox(
+      height: 10.0,
+    );
+    final List<Widget> produce = [
+      spacer,
+    ];
+
+    _threads.forEach((thread) {
+      produce.add(Container(
+        padding: EdgeInsets.symmetric(horizontal: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            ClippedThread(thread['message']),
+          ],
+        ),
+      ));
+      produce.add(spacer);
+    });
+
+    return produce;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,9 +152,7 @@ class ChatRoom extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  children: <Widget>[
-                    ChatThread('Aloha !'),
-                  ],
+                  children: buildThreads(),
                 ),
               ),
             ),
