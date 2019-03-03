@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import './chat_list.dart';
+import './clip_r_triangle.dart';
 
-final chatRadius = 15.0;
+final chatRadius = 5.0;
 
 class ChatRoom extends StatelessWidget {
   final ChatItem chatItem;
@@ -128,12 +128,12 @@ class ChatRoom extends StatelessWidget {
                     Text('hi'),
                     Text('hihihi'),
                     ClipPath(
-                      clipper: ClipRTriangle(),
+                      clipper: ClipRTriangle(chatRadius),
                       child: ClipRRect(
                         borderRadius:
                             BorderRadius.all(Radius.circular(chatRadius)),
                         child: Container(
-                          height: 100.0,
+                          height: 30.0,
                           width: 100.0,
                           color: Colors.redAccent,
                         ),
@@ -151,56 +151,5 @@ class ChatRoom extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class ClipRTriangle extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    // final path = Path();
-    // final r = chatRadius;
-
-    // path.lineTo(0.0, r);
-    // path.conicTo(r - r * sin(0.785), r + r * cos(0.785), r - r * sin(0.393),
-    //     r + cos(0.393), 1);
-
-    // path.moveTo(r, size.height);
-
-    // path.moveTo(size.width, size.height);
-    // path.moveTo(size.width, 0.0);
-
-    // path.close();
-    // return path;
-
-    final path = Path();
-    path.lineTo(0.0, chatRadius);
-    // path.lineTo(chatRadius, chatRadius + chatRadius / 2);
-    final r = chatRadius;
-    final angle = 0.785;
-    path.conicTo(r - r * sin(angle), r + r * cos(angle),
-        r - r * sin(angle * 0.5), r + r * cos(angle * 0.5), 1);
-
-    final moveIn = 2 * r;
-    path.lineTo(moveIn, r + moveIn * tan(angle));
-
-    path.lineTo(moveIn, size.height - chatRadius);
-
-    path.conicTo(
-        moveIn + chatRadius * 2 - chatRadius * sin(0.785),
-        size.height - (chatRadius - chatRadius * cos(0.785)),
-        moveIn + chatRadius * 2,
-        size.height,
-        1);
-
-    path.lineTo(size.width, size.height);
-    path.lineTo(size.width, 0.0);
-
-    path.close();
-    return path;
-  }
-
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return true;
   }
 }
