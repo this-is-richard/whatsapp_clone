@@ -2,37 +2,44 @@ import 'package:flutter/material.dart';
 import './chat_list.dart';
 import './left_thread.dart';
 import './right_thread.dart';
+import './model/thread.dart';
 
-final _threads = [
-  {'fromSelf': false, 'message': 'Aloha !'},
-  {'fromSelf': false, 'message': 'Nei dim ah'},
-  {'fromSelf': true, 'message': '未死'},
-  {'fromSelf': false, 'message': 'lets hang out a bit ?'},
-  {'fromSelf': true, 'message': '好'},
-];
-
-class ChatRoom extends StatelessWidget {
+class ChatRoom extends StatefulWidget {
   final ChatItem chatItem;
 
   ChatRoom(this.chatItem);
 
-  buildThreads(BuildContext context) {
+  @override
+  _ChatRoomState createState() => _ChatRoomState();
+}
+
+class _ChatRoomState extends State<ChatRoom> {
+  final TextEditingController _textController = new TextEditingController();
+  final List<Thread> _threads = [
+    Thread(fromSelf: false, message: 'Aloha !'),
+    Thread(fromSelf: false, message: 'Nei dim ah'),
+    Thread(fromSelf: true, message: '未死'),
+    Thread(fromSelf: false, message: 'lets hang out a bit ?'),
+    Thread(fromSelf: true, message: '好'),
+  ];
+
+  _buildThreads(BuildContext context) {
     final spacer = SizedBox(
       height: 10.0,
     );
     final List<Widget> produce = [
-      spacer,
+      // spacer,
     ];
 
     _threads.forEach((thread) {
-      if (thread['fromSelf'] == true) {
+      if (thread.fromSelf == true) {
         produce.add(Container(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
               RightThread(
-                thread['message'],
+                thread.message,
                 backgroundColor: Theme.of(context).indicatorColor,
               ),
             ],
@@ -45,7 +52,7 @@ class ChatRoom extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               LeftThread(
-                thread['message'],
+                thread.message,
                 backgroundColor: Theme.of(context).accentColor,
               ),
             ],
@@ -53,10 +60,20 @@ class ChatRoom extends StatelessWidget {
         ));
       }
 
-      produce.add(spacer);
+      // produce.add(spacer);
     });
 
     return produce;
+  }
+
+  _handleSubmitted(String text) {
+    _textController.clear();
+    setState(() {
+      _threads.add(Thread(
+        fromSelf: true,
+        message: text,
+      ));
+    });
   }
 
   @override
@@ -77,14 +94,14 @@ class ChatRoom extends StatelessWidget {
               top: defaultIconButtonPadding,
               child: CircleAvatar(
                 radius: avatarRadius,
-                child: chatItem.avatar,
+                child: widget.chatItem.avatar,
               ),
             ),
             Positioned(
               left: leftOffset + avatarRadius * 2 + 8.0,
               top:
                   defaultIconButtonPadding + avatarRadius / 2 - titleLineHeight,
-              child: Text(chatItem.name),
+              child: Text(widget.chatItem.name),
             ),
           ],
         ),
@@ -126,6 +143,8 @@ class ChatRoom extends StatelessWidget {
                 hintText: 'Type a message',
                 border: InputBorder.none,
               ),
+              controller: _textController,
+              onSubmitted: _handleSubmitted,
             ),
           ),
           Icon(
@@ -159,8 +178,11 @@ class ChatRoom extends StatelessWidget {
         SizedBox(
           width: 5.0,
         ),
-        CircleAvatar(
-          child: Icon(Icons.mic),
+        GestureDetector(
+          onTap: () => _handleSubmitted(_textController.text),
+          child: CircleAvatar(
+            child: Icon(Icons.mic),
+          ),
         ),
       ],
     );
@@ -172,10 +194,48 @@ class ChatRoom extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: buildThreads(context),
-                ),
+              child: ListView.builder(
+                itemCount: _threads.length,
+                reverse: true,
+                itemBuilder: (context, index) {
+                  final thread = _threads.reversed.toList()[index];
+                  final spacer = SizedBox(
+                    height: 8.0,
+                  );
+                  final List<Widget> children = [spacer];
+
+                  if (thread.fromSelf == true) {
+                    children.add(Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          RightThread(
+                            thread.message,
+                            backgroundColor: Theme.of(context).indicatorColor,
+                          ),
+                        ],
+                      ),
+                    ));
+                  } else {
+                    children.add(Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          LeftThread(
+                            thread.message,
+                            backgroundColor: Theme.of(context).accentColor,
+                          ),
+                        ],
+                      ),
+                    ));
+                  }
+
+                  return Column(
+                    children: children,
+                  );
+                },
               ),
             ),
             Container(
