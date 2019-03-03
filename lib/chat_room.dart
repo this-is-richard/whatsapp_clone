@@ -3,7 +3,7 @@ import './chat_list.dart';
 import './left_thread.dart';
 import './right_thread.dart';
 import './model/thread.dart';
-import './round_input.dart';
+import './send_message_bar.dart';
 
 class ChatRoom extends StatefulWidget {
   final ChatItem chatItem;
@@ -15,7 +15,6 @@ class ChatRoom extends StatefulWidget {
 }
 
 class _ChatRoomState extends State<ChatRoom> {
-  final TextEditingController _textController = new TextEditingController();
   final List<Thread> _threads = [
     Thread(fromSelf: false, message: 'Aloha !'),
     Thread(fromSelf: false, message: 'Nei dim ah'),
@@ -70,28 +69,7 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   _buildBottomBar() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: RoundInput(
-              textController: _textController,
-              handleSubmitted: _handleSubmitted,
-            ),
-          ),
-          SizedBox(
-            width: 5.0,
-          ),
-          GestureDetector(
-            onTap: () => _handleSubmitted(_textController.text),
-            child: CircleAvatar(
-              child: Icon(Icons.mic),
-            ),
-          ),
-        ],
-      ),
-    );
+    return SendMessageBar(_handleSubmitted);
   }
 
   _buildMessageDisplay() {
@@ -140,8 +118,7 @@ class _ChatRoomState extends State<ChatRoom> {
     );
   }
 
-  _handleSubmitted(String text) {
-    _textController.clear();
+  void _handleSubmitted(String text) {
     setState(() {
       _threads.add(Thread(
         fromSelf: true,

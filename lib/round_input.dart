@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 class RoundInput extends StatelessWidget {
   final Color _color;
   final TextEditingController _textController;
-  final Function _handleSubmitted;
+  final ValueChanged<String> _handleSubmitted;
+  final ValueChanged<String> _handleChange;
 
   RoundInput({
     @required TextEditingController textController,
-    @required Function handleSubmitted,
+    @required ValueChanged<String> handleSubmitted,
+    ValueChanged<String> handleChange,
     color,
   })  : _textController = textController,
         _handleSubmitted = handleSubmitted,
+        _handleChange = handleChange,
         _color = color ?? Colors.white;
 
   @override
@@ -40,6 +43,13 @@ class RoundInput extends StatelessWidget {
                 ),
                 controller: _textController,
                 onSubmitted: _handleSubmitted,
+                onChanged: (String text) {
+                  if (_handleChange == null) {
+                    return;
+                  }
+
+                  _handleChange(text);
+                },
               ),
             ),
             Icon(
