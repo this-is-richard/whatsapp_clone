@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import './chat_list.dart';
-import './clipped_thread.dart';
+import './left_thread.dart';
+import './right_thread.dart';
 
 final _threads = [
   {'fromSelf': false, 'message': 'Aloha !'},
   {'fromSelf': false, 'message': 'Nei dim ah'},
+  {'fromSelf': true, 'message': '未死'},
   {'fromSelf': false, 'message': 'lets hang out a bit ?'},
+  {'fromSelf': true, 'message': '好'},
 ];
 
 class ChatRoom extends StatelessWidget {
@@ -13,7 +16,7 @@ class ChatRoom extends StatelessWidget {
 
   ChatRoom(this.chatItem);
 
-  buildThreads() {
+  buildThreads(BuildContext context) {
     final spacer = SizedBox(
       height: 10.0,
     );
@@ -22,15 +25,34 @@ class ChatRoom extends StatelessWidget {
     ];
 
     _threads.forEach((thread) {
-      produce.add(Container(
-        padding: EdgeInsets.symmetric(horizontal: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            ClippedThread(thread['message']),
-          ],
-        ),
-      ));
+      if (thread['fromSelf'] == true) {
+        produce.add(Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              RightThread(
+                thread['message'],
+                backgroundColor: Theme.of(context).indicatorColor,
+              ),
+            ],
+          ),
+        ));
+      } else {
+        produce.add(Container(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              LeftThread(
+                thread['message'],
+                backgroundColor: Theme.of(context).accentColor,
+              ),
+            ],
+          ),
+        ));
+      }
+
       produce.add(spacer);
     });
 
@@ -152,7 +174,7 @@ class ChatRoom extends StatelessWidget {
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
-                  children: buildThreads(),
+                  children: buildThreads(context),
                 ),
               ),
             ),

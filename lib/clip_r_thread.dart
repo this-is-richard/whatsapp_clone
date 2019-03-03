@@ -1,10 +1,10 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-class ClipRLeftThread extends CustomClipper<Path> {
+class ClipRThread extends CustomClipper<Path> {
   final double chatRadius;
 
-  ClipRLeftThread(this.chatRadius);
+  ClipRThread(this.chatRadius);
 
   @override
   Path getClip(Size size) {
