@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './chat_room.dart';
+import './model/chat_list_item.dart';
 
 final _chatData = List<Map<String, Object>>.generate(10, (int index) {
   return {
@@ -10,26 +11,13 @@ final _chatData = List<Map<String, Object>>.generate(10, (int index) {
   };
 });
 
-class ChatItem {
-  final Icon avatar;
-  final String name;
-  final String lastMessage;
-  final String lastSeen;
-
-  ChatItem.fromData(data)
-      : this.avatar = data['avatar'],
-        this.name = data['name'],
-        this.lastMessage = data['lastMessage'],
-        this.lastSeen = data['lastSeen'];
-}
-
 class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: _chatData.length,
       itemBuilder: (BuildContext context, int index) {
-        final chatItem = ChatItem.fromData(_chatData[index]);
+        final chatItem = ChatListItem.fromData(_chatData[index]);
         final avatarRadius = 25.0;
 
         return GestureDetector(

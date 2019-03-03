@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import './chat_list.dart';
-import './left_thread.dart';
-import './right_thread.dart';
+import './model/chat_list_item.dart';
+import './chat_thread.dart';
 import './model/thread.dart';
 import './send_message_bar.dart';
 
 class ChatRoom extends StatefulWidget {
-  final ChatItem chatItem;
+  final ChatListItem chatItem;
 
   ChatRoom(this.chatItem);
 
@@ -14,14 +13,8 @@ class ChatRoom extends StatefulWidget {
   _ChatRoomState createState() => _ChatRoomState();
 }
 
-class _ChatRoomState extends State<ChatRoom> {
-  final List<Thread> _threads = [
-    Thread(fromSelf: false, message: 'Aloha !'),
-    Thread(fromSelf: false, message: 'Nei dim ah'),
-    Thread(fromSelf: true, message: '未死'),
-    Thread(fromSelf: false, message: 'lets hang out a bit ?'),
-    Thread(fromSelf: true, message: '好'),
-  ];
+class _ChatRoomState extends State<ChatRoom> with TickerProviderStateMixin {
+  final List<ChatThread> _chatThreads = [];
 
   _buildAppBar() {
     final avatarRadius = 20.0;
@@ -74,42 +67,18 @@ class _ChatRoomState extends State<ChatRoom> {
 
   _buildMessageDisplay() {
     return ListView.builder(
-      itemCount: _threads.length,
+      itemCount: _chatThreads.length,
       reverse: true,
       itemBuilder: (context, index) {
-        final thread = _threads.reversed.toList()[index];
+        final _chatThread = _chatThreads.reversed.toList()[index];
         final spacer = SizedBox(
           height: 8.0,
         );
-        final List<Widget> children = [spacer];
 
-        if (thread.fromSelf == true) {
-          children.add(Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                RightThread(
-                  thread.message,
-                  backgroundColor: Theme.of(context).indicatorColor,
-                ),
-              ],
-            ),
-          ));
-        } else {
-          children.add(Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                LeftThread(
-                  thread.message,
-                  backgroundColor: Theme.of(context).accentColor,
-                ),
-              ],
-            ),
-          ));
-        }
+        final List<Widget> children = [
+          spacer,
+          _chatThread,
+        ];
 
         return Column(
           children: children,
@@ -119,12 +88,50 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   void _handleSubmitted(String text) {
-    setState(() {
-      _threads.add(Thread(
+    final chatThread = ChatThread(
+      Thread(
         fromSelf: true,
         message: text,
-      ));
+      ),
+      AnimationController(
+        vsync: this,
+        duration: Duration(milliseconds: 800),
+      ),
+    );
+
+    setState(() {
+      _chatThreads.add(chatThread);
     });
+
+    chatThread.animationController.forward();
+  }
+
+  @override
+  void initState() {
+    print('==== ChatRoom initState ====');
+
+    [
+      Thread(fromSelf: false, message: 'Aloha !'),
+      Thread(fromSelf: false, message: 'Nei dim ah'),
+      Thread(fromSelf: true, message: '未死'),
+      Thread(fromSelf: false, message: 'lets hang out a bit ?'),
+      Thread(fromSelf: true, message: '好'),
+    ].forEach((thread) {
+      final chatThead = ChatThread(
+        thread,
+        AnimationController(
+          vsync: this,
+          duration: Duration(
+            milliseconds: 800,
+          ),
+        ),
+      );
+
+      _chatThreads.add(chatThead);
+
+      chatThead.animationController.forward();
+    });
+    super.initState();
   }
 
   @override
@@ -143,5 +150,13 @@ class _ChatRoomState extends State<ChatRoom> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    for (var chatThread in _chatThreads) {
+      chatThread.animationController.dispose();
+    }
+    super.dispose();
   }
 }
