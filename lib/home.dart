@@ -60,8 +60,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         Center(
           child: Text('Tab 1'),
         ),
-        Center(
-          child: Text('Tab 2'),
+        ListView.builder(
+          itemCount: 1000,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text('Tile $index'),
+            );
+          },
         ),
         Center(
           child: Text('Tab 3'),
@@ -100,7 +105,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: <Widget>[
-          _buildTabView(),
+          Container(
+            margin: EdgeInsets.only(
+                top: _getappBarHeight(context) -
+                    MediaQuery.of(context).padding.top),
+            child: _buildTabView(),
+          ),
           Positioned(
             left: 0.0,
             right: 0.0,
