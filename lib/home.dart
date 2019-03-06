@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './chat_list/chat_list.dart';
+import './custom_camera/custom_camera.dart';
 
 class Home extends StatelessWidget {
   final appBar = AppBar(
@@ -33,7 +34,7 @@ class Home extends StatelessWidget {
         appBar: appBar,
         body: TabBarView(
           children: <Widget>[
-            Text('camera'),
+            CustomCamera(),
             ChatList(),
             Text('status'),
             Text('calls'),

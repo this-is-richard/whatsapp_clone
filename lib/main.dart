@@ -1,7 +1,20 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import './home.dart';
 
-void main() => runApp(WhatsAppClone());
+List<CameraDescription> cameras;
+void logError(String code, String message) =>
+    print('Error: $code\nError Message: $message');
+
+Future<void> main() async {
+  try {
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    logError(e.code, e.description);
+  }
+  runApp(WhatsAppClone());
+}
 
 class WhatsAppClone extends StatelessWidget {
   @override
