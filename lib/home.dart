@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './chat_list.dart';
+import './chat_list/chat_list.dart';
 
 class Home extends StatelessWidget {
   final appBar = AppBar(

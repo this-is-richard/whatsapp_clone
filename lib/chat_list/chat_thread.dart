@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import './model/thread.dart';
-import './UI/clip_r_thread.dart';
+import '../model/thread.dart';
+import '../UI/clip_r_thread.dart';
 
 class ChatThread extends StatelessWidget {
   final Thread thread;
   final AnimationController animationController;
+  // controller to be initialized by parent
+  // so that parent can have control over when to animate
 
   ChatThread(this.thread, this.animationController);
-
   @override
   Widget build(BuildContext context) {
     Widget child;
@@ -42,7 +43,7 @@ class ChatThread extends StatelessWidget {
 
     return SizeTransition(
       sizeFactor: CurvedAnimation(
-        parent: this.animationController,
+        parent: animationController,
         curve: Curves.easeOut,
       ),
       child: child,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import './UI/round_input.dart';
+import '../UI/round_input.dart';
 
 class SendMessageBar extends StatefulWidget {
   final ValueChanged<String> _handleSubmitted;
