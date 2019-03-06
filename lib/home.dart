@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import './tab_camera/tab_camera.dart';
+import './chat_list/chat_list.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -37,16 +39,16 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         controller: _tabController,
         tabs: <Widget>[
           Tab(
-            text: 'A',
+            icon: Icon(Icons.camera_alt),
           ),
           Tab(
-            text: 'B',
+            text: 'CHATS',
           ),
           Tab(
-            text: 'C',
+            text: 'STATUS',
           ),
           Tab(
-            text: 'D',
+            text: 'CALLS',
           ),
         ],
       ),
@@ -57,17 +59,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return TabBarView(
       controller: _tabController,
       children: <Widget>[
-        Center(
-          child: Text('Tab 1'),
-        ),
-        ListView.builder(
-          itemCount: 1000,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text('Tile $index'),
-            );
-          },
-        ),
+        TabCamera(),
+        ChatList(),
         Center(
           child: Text('Tab 3'),
         ),
@@ -102,13 +95,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final marginTopRaw = _appBarTop +
+        _getappBarHeight(context) -
+        MediaQuery.of(context).padding.top;
+    final marginTop = marginTopRaw > 0
+        ? marginTopRaw
+        : marginTopRaw + MediaQuery.of(context).padding.top;
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
           Container(
             margin: EdgeInsets.only(
-                top: _getappBarHeight(context) -
-                    MediaQuery.of(context).padding.top),
+              top: marginTop,
+            ),
             child: _buildTabView(),
           ),
           Positioned(
