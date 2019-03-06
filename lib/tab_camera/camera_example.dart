@@ -6,10 +6,10 @@ import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import '../main.dart';
 
-class CustomCamera extends StatefulWidget {
+class CameraExample extends StatefulWidget {
   @override
-  _CustomCameraState createState() {
-    return _CustomCameraState();
+  _CameraExampleState createState() {
+    return _CameraExampleState();
   }
 }
 
@@ -29,7 +29,7 @@ IconData getCameraLensIcon(CameraLensDirection direction) {
 void logError(String code, String message) =>
     print('Error: $code\nError Message: $message');
 
-class _CustomCameraState extends State<CustomCamera> {
+class _CameraExampleState extends State<CameraExample> {
   CameraController controller;
   String imagePath;
   String videoPath;
@@ -40,45 +40,39 @@ class _CustomCameraState extends State<CustomCamera> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Camera example'),
-      ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: Center(
-                  child: _cameraPreviewWidget(),
-                ),
+    return Column(
+      children: <Widget>[
+        Expanded(
+          child: Container(
+            child: Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Center(
+                child: _cameraPreviewWidget(),
               ),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                border: Border.all(
-                  color: controller != null && controller.value.isRecordingVideo
-                      ? Colors.redAccent
-                      : Colors.grey,
-                  width: 3.0,
-                ),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.black,
+              border: Border.all(
+                color: controller != null && controller.value.isRecordingVideo
+                    ? Colors.redAccent
+                    : Colors.grey,
+                width: 3.0,
               ),
             ),
           ),
-          _captureControlRowWidget(),
-          Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                _cameraTogglesRowWidget(),
-                _thumbnailWidget(),
-              ],
-            ),
+        ),
+        _captureControlRowWidget(),
+        Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: <Widget>[
+              _cameraTogglesRowWidget(),
+              _thumbnailWidget(),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -342,14 +336,5 @@ class _CustomCameraState extends State<CustomCamera> {
   void _showCameraException(CameraException e) {
     logError(e.code, e.description);
     showInSnackBar('Error: ${e.code}\n${e.description}');
-  }
-}
-
-class CameraApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CustomCamera(),
-    );
   }
 }
