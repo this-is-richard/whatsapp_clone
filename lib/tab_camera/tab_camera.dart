@@ -5,6 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:video_player/video_player.dart';
 import '../main.dart';
+import '../random_image_url.dart';
 
 class TabCamera extends StatefulWidget {
   @override
@@ -45,6 +46,60 @@ class _TabCameraState extends State<TabCamera> {
     }
   }
 
+  Widget _buildGalleryBar() {
+    final barHeight = 90.0;
+    final vertPadding = 10.0;
+
+    return Container(
+      height: barHeight,
+      child: ListView.builder(
+        padding: EdgeInsets.symmetric(vertical: vertPadding),
+        scrollDirection: Axis.horizontal,
+        itemCount: 1000,
+        itemBuilder: (BuildContext context, int index) {
+          return Container(
+            padding: EdgeInsets.only(right: 5.0),
+            width: 70.0,
+            height: barHeight - vertPadding * 2,
+            child: Image.network(
+              randomImageUrl(),
+              fit: BoxFit.cover,
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildControlBar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
+        IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.flash_auto),
+          onPressed: () {},
+        ),
+        Container(
+          height: 80.0,
+          width: 80.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: Colors.white,
+              width: 5.0,
+            ),
+          ),
+        ),
+        IconButton(
+          color: Colors.white,
+          icon: Icon(Icons.switch_camera),
+          onPressed: () {},
+        ),
+      ],
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -59,14 +114,32 @@ class _TabCameraState extends State<TabCamera> {
 
     return Stack(
       children: <Widget>[
-        CameraPreview(controller),
+        Container(
+          constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width,
+            maxHeight: MediaQuery.of(context).size.height,
+          ),
+          child: CameraPreview(controller),
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            _buildGalleryBar(),
+            _buildControlBar(),
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(
+                'Tap for photo',
+                style: Theme.of(context)
+                    .textTheme
+                    .subhead
+                    .copyWith(color: Colors.white),
+              ),
+            )
+          ],
+        )
       ],
     );
-
-    // return AspectRatio(
-    //   aspectRatio: controller.value.aspectRatio,
-    //   child: CameraPreview(controller),
-    // );
   }
 
   @override
