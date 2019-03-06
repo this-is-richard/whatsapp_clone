@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import './chat_list/chat_list.dart';
-import './tab_camera/tab_camera.dart';
-import './tab_camera/camera_example.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,52 +6,22 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  double _appBarTop = 0.0;
   TabController _tabController;
 
-  final _tabs = <Widget>[
-    Tab(icon: Icon(Icons.camera_alt)),
-    Tab(text: 'CHATS'),
-    Tab(text: 'STATUS'),
-    Tab(text: 'CALLS'),
-  ];
+  double _getappBarHeight(BuildContext context) {
+    final double kTabHeight = 46.0;
+    final double kTextAndIconTabHeight = 72.0;
+    final double inicatorHeight = 2.0;
 
-  PreferredSizeWidget _buildTabs(BuildContext context) {
-    return TabBar(
-      controller: _tabController,
-      onTap: (int index) {
-        if (index == 0) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) {
-            return Scaffold(
-              body: TabCamera(),
-            );
-          })).then((_) {
-            _tabController.animateTo(1);
-          });
-        }
-      },
-      tabs: _tabs,
-    );
+    return kToolbarHeight +
+        kTabHeight +
+        inicatorHeight +
+        MediaQuery.of(context).padding.top;
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(
-      vsync: this,
-      length: _tabs.length,
-      initialIndex: 1,
-    );
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final appBar = AppBar(
+  _buildAppBar() {
+    return AppBar(
       title: Text('WhatsApp'),
       actions: <Widget>[
         IconButton(
@@ -66,20 +33,83 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           onPressed: () {},
         ),
       ],
-      bottom: _buildTabs(context),
-    );
-
-    return Scaffold(
-      appBar: appBar,
-      body: TabBarView(
+      bottom: TabBar(
         controller: _tabController,
-        children: <Widget>[
-          Center(
-            child: Text('Loading camera...'),
+        tabs: <Widget>[
+          Tab(
+            text: 'A',
           ),
-          ChatList(),
-          Text('status'),
-          Text('calls'),
+          Tab(
+            text: 'B',
+          ),
+          Tab(
+            text: 'C',
+          ),
+          Tab(
+            text: 'D',
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildTabView() {
+    return TabBarView(
+      controller: _tabController,
+      children: <Widget>[
+        Center(
+          child: Text('Tab 1'),
+        ),
+        Center(
+          child: Text('Tab 2'),
+        ),
+        Center(
+          child: Text('Tab 3'),
+        ),
+        Center(
+          child: Text('Tab 4'),
+        )
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(vsync: this, length: 4, initialIndex: 1);
+    _tabController.animation.addListener(() {
+      if (_tabController.animation.value <= 1.0) {
+        final value = _tabController.animation.value;
+        final appBarHeight = _getappBarHeight(context);
+
+        setState(() {
+          _appBarTop = -(1 - value) * appBarHeight;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          _buildTabView(),
+          Positioned(
+            left: 0.0,
+            right: 0.0,
+            top: _appBarTop,
+            child: Container(
+              height: _getappBarHeight(context),
+              child: _buildAppBar(),
+            ),
+          ),
         ],
       ),
     );
