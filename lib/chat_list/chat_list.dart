@@ -15,8 +15,7 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
-      itemBuilder: (BuildContext context, int index) {
+      itemBuilder: (BuildContext context, int _) {
         return ChatListTile(
           Icon(Icons.person),
           'Alice',

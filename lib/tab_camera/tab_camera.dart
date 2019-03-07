@@ -132,8 +132,7 @@ class _TabCameraState extends State<TabCamera> {
       child: ListView.builder(
         padding: EdgeInsets.symmetric(vertical: vertPadding),
         scrollDirection: Axis.horizontal,
-        itemCount: 1000,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (BuildContext context, int _) {
           return Container(
             padding: EdgeInsets.only(right: 5.0),
             width: 70.0,

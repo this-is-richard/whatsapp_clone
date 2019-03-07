@@ -12,6 +12,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   double _appBarTop = 0.0;
   TabController _tabController;
 
+  final int _cameraTapIndex = 0;
+
   double _getappBarHeight(BuildContext context) {
     final double kTabHeight = 46.0;
     final double kTextAndIconTabHeight = 72.0;
@@ -62,7 +64,8 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
       children: <Widget>[
         WillPopScope(
           onWillPop: () {
-            _tabController.animateTo(1);
+            // shift to the right-handed-side tap;
+            _tabController.animateTo(_cameraTapIndex + 1);
           },
           child: TabCamera(),
         ),
@@ -77,24 +80,71 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
+  Widget _buildFAB() {
+    final tabIndex = _tabController.animation.value;
+    print(tabIndex);
+
+    if (tabIndex > 0.7 && tabIndex < 1.7) {
+      return FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            return SelectContact();
+          }));
+        },
+        child: Icon(
+          Icons.message,
+          color: Colors.white,
+        ),
+      );
+    } else if (tabIndex > 1.7 && tabIndex < 2.7) {
+      return FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.camera_alt,
+          color: Colors.white,
+        ),
+      );
+    } else if (tabIndex > 2.7) {
+      return FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          Icons.add_call,
+          color: Colors.white,
+        ),
+      );
+    }
+
+    return null;
+  }
+
+  _handleAppBarAnimation() {
+    // This animation calculation will only work if camera tab index == 0
+    if (_tabController.animation.value <= 1.0 && _cameraTapIndex == 0) {
+      final value = _tabController.animation.value;
+      final appBarHeight = _getappBarHeight(context);
+
+      setState(() {
+        _appBarTop = -(1 - value) * appBarHeight;
+      });
+    }
+  }
+
+  _handleTabIndex() {
+    setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(vsync: this, length: 4, initialIndex: 1);
-    _tabController.animation.addListener(() {
-      if (_tabController.animation.value <= 1.0) {
-        final value = _tabController.animation.value;
-        final appBarHeight = _getappBarHeight(context);
-
-        setState(() {
-          _appBarTop = -(1 - value) * appBarHeight;
-        });
-      }
-    });
+    _tabController.animation.addListener(_handleAppBarAnimation);
+    _tabController.animation.addListener(_handleTabIndex);
   }
 
   @override
   void dispose() {
+    _tabController.animation.removeListener(_handleAppBarAnimation);
+    _tabController.animation.removeListener(_handleTabIndex);
     _tabController.dispose();
     super.dispose();
   }
@@ -126,17 +176,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-            return SelectContact();
-          }));
-        },
-        child: Icon(
-          Icons.message,
-          color: Colors.white,
-        ),
-      ),
+      floatingActionButton: _buildFAB(),
     );
   }
 }
