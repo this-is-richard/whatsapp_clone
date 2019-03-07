@@ -39,7 +39,7 @@ class _TabCameraState extends State<TabCamera> {
     try {
       await controller.initialize();
     } on CameraException catch (e) {
-      _showInSnackBar('Error: ${e.code}\n${e.description}');
+      _showCameraException(e);
     }
 
     if (mounted) {
@@ -57,6 +57,57 @@ class _TabCameraState extends State<TabCamera> {
     }
     final newIndex = _cameraIndex + 1 == cameras.length ? 0 : _cameraIndex + 1;
     _initCamera(newIndex);
+  }
+
+  void _onTakePictureButtonPress() {
+    _takePicture().then((filePath) {
+      if (filePath != null) {
+        // _showInSnackBar('Picture saved to $filePath');
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return Scaffold(
+            appBar: AppBar(
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {},
+                )
+              ],
+            ),
+            body: Container(
+              color: Colors.black,
+              child: Center(
+                child: Image.file(File(filePath)),
+              ),
+            ),
+          );
+        }));
+      }
+    });
+  }
+
+  String _timestamp() => DateTime.now().millisecondsSinceEpoch.toString();
+
+  Future<String> _takePicture() async {
+    if (!controller.value.isInitialized || controller.value.isTakingPicture) {
+      return null;
+    }
+    final Directory extDir = await getApplicationDocumentsDirectory();
+    final String dirPath = '${extDir.path}/Pictures/whatsapp_clone';
+    await Directory(dirPath).create(recursive: true);
+    final String filePath = '$dirPath/${_timestamp()}.jpg';
+
+    try {
+      await controller.takePicture(filePath);
+    } on CameraException catch (e) {
+      _showCameraException(e);
+      return null;
+    }
+    return filePath;
+  }
+
+  void _showCameraException(CameraException e) {
+    logError(e.code, e.description);
+    _showInSnackBar('Error: ${e.code}\n${e.description}');
   }
 
   Widget _buildGalleryBar() {
@@ -93,14 +144,17 @@ class _TabCameraState extends State<TabCamera> {
           icon: Icon(Icons.flash_auto),
           onPressed: () {},
         ),
-        Container(
-          height: 80.0,
-          width: 80.0,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(
-              color: Colors.white,
-              width: 5.0,
+        GestureDetector(
+          onTap: _onTakePictureButtonPress,
+          child: Container(
+            height: 80.0,
+            width: 80.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white,
+                width: 5.0,
+              ),
             ),
           ),
         ),
