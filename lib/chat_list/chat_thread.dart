@@ -34,7 +34,7 @@ class ChatThread extends StatelessWidget {
           children: <Widget>[
             _LeftThread(
               thread.message,
-              backgroundColor: Theme.of(context).accentColor,
+              backgroundColor: Color(0xFFdcf8c6),
             ),
           ],
         ),

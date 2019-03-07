@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './tab_camera/tab_camera.dart';
 import './chat_list/chat_list.dart';
+import './select_contact.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -124,6 +125,17 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+            return SelectContact();
+          }));
+        },
+        child: Icon(
+          Icons.message,
+          color: Colors.white,
+        ),
       ),
     );
   }
