@@ -18,10 +18,12 @@ packages:
   camera:
     dependency: "direct main"
     description:
-      name: camera
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0+3"
+      path: "packages/camera"
+      ref: HEAD
+      resolved-ref: "263fad7717ea133b8ee519c41343f7a2bbac5812"
+      url: "git://github.com/ng-kode/plugins.git"
+    source: git
+    version: "0.4.2"
   charcode:
     dependency: transitive
     description:

@@ -98,9 +98,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     final marginTopRaw = _appBarTop +
         _getappBarHeight(context) -
         MediaQuery.of(context).padding.top;
-    final marginTop = marginTopRaw > 0
-        ? marginTopRaw
-        : marginTopRaw + MediaQuery.of(context).padding.top;
+    final marginTop = marginTopRaw > 0 ? marginTopRaw : 0.0;
 
     return Scaffold(
       body: Stack(
