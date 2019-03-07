@@ -14,6 +14,7 @@ class TabCamera extends StatefulWidget {
 
 class _TabCameraState extends State<TabCamera> {
   CameraController controller;
+  int _cameraIndex = 0;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -21,11 +22,11 @@ class _TabCameraState extends State<TabCamera> {
     _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
   }
 
-  void initCamera() async {
+  void _initCamera(int index) async {
     if (controller != null) {
       await controller.dispose();
     }
-    controller = CameraController(cameras[0], ResolutionPreset.high);
+    controller = CameraController(cameras[index], ResolutionPreset.high);
 
     // If the controller is updated then update the UI.
     controller.addListener(() {
@@ -42,8 +43,20 @@ class _TabCameraState extends State<TabCamera> {
     }
 
     if (mounted) {
-      setState(() {});
+      setState(() {
+        _cameraIndex = index;
+      });
     }
+  }
+
+  void _onSwitchCamera() {
+    if (controller == null ||
+        !controller.value.isInitialized ||
+        controller.value.isTakingPicture) {
+      return;
+    }
+    final newIndex = _cameraIndex + 1 == cameras.length ? 0 : _cameraIndex + 1;
+    _initCamera(newIndex);
   }
 
   Widget _buildGalleryBar() {
@@ -94,7 +107,7 @@ class _TabCameraState extends State<TabCamera> {
         IconButton(
           color: Colors.white,
           icon: Icon(Icons.switch_camera),
-          onPressed: () {},
+          onPressed: _onSwitchCamera,
         ),
       ],
     );
@@ -103,7 +116,7 @@ class _TabCameraState extends State<TabCamera> {
   @override
   void initState() {
     super.initState();
-    initCamera();
+    _initCamera(_cameraIndex);
   }
 
   @override
@@ -115,11 +128,13 @@ class _TabCameraState extends State<TabCamera> {
     return Stack(
       children: <Widget>[
         Container(
-          constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width,
-            maxHeight: MediaQuery.of(context).size.height,
+          color: Colors.black,
+          child: Center(
+            child: AspectRatio(
+              aspectRatio: controller.value.aspectRatio,
+              child: CameraPreview(controller),
+            ),
           ),
-          child: CameraPreview(controller),
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.end,
