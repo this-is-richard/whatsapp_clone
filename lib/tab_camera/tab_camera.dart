@@ -66,11 +66,24 @@ class _TabCameraState extends State<TabCamera> {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.black,
               actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.crop_rotate),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.insert_emoticon),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: Icon(Icons.text_fields),
+                  onPressed: () {},
+                ),
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {},
-                )
+                ),
               ],
             ),
             body: Container(
@@ -175,19 +188,17 @@ class _TabCameraState extends State<TabCamera> {
 
   @override
   Widget build(BuildContext context) {
-    if (controller == null || !controller.value.isInitialized) {
-      return Text('Loading camera...');
-    }
-
     return Stack(
       children: <Widget>[
         Container(
           color: Colors.black,
           child: Center(
-            child: AspectRatio(
-              aspectRatio: controller.value.aspectRatio,
-              child: CameraPreview(controller),
-            ),
+            child: controller.value.isInitialized
+                ? AspectRatio(
+                    aspectRatio: controller.value.aspectRatio,
+                    child: CameraPreview(controller),
+                  )
+                : Text('Loading camera...'),
           ),
         ),
         Column(

@@ -103,6 +103,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return Scaffold(
       body: Stack(
         children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(
+              top: marginTop,
+            ),
+            child: _buildTabView(),
+          ),
           Positioned(
             left: 0.0,
             right: 0.0,
@@ -111,12 +117,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
               height: _getappBarHeight(context),
               child: _buildAppBar(),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.only(
-              top: marginTop,
-            ),
-            child: _buildTabView(),
           ),
         ],
       ),
