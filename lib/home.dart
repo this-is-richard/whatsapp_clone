@@ -3,6 +3,7 @@ import './tab_camera/tab_camera.dart';
 import './chat_list/chat_list.dart';
 import './select_contact.dart';
 import './call_list//call_list.dart';
+import './custom_app_bar.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -24,39 +25,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         kTabHeight +
         inicatorHeight +
         MediaQuery.of(context).padding.top;
-  }
-
-  _buildAppBar() {
-    return AppBar(
-      title: Text('WhatsApp'),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(Icons.more_vert),
-          onPressed: () {},
-        ),
-      ],
-      bottom: TabBar(
-        controller: _tabController,
-        tabs: <Widget>[
-          Tab(
-            icon: Icon(Icons.camera_alt),
-          ),
-          Tab(
-            text: 'CHATS',
-          ),
-          Tab(
-            text: 'STATUS',
-          ),
-          Tab(
-            text: 'CALLS',
-          ),
-        ],
-      ),
-    );
   }
 
   _buildTabView() {
@@ -167,9 +135,25 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             left: 0.0,
             right: 0.0,
             top: _appBarTop,
-            child: Container(
-              height: _getappBarHeight(context),
-              child: _buildAppBar(),
+            child: CustomAppBar(
+              context,
+              'WhatsApp',
+              <Widget>[
+                Tab(
+                  icon: Icon(Icons.camera_alt),
+                ),
+                Tab(
+                  text: 'CHATS',
+                ),
+                Tab(
+                  text: 'STATUS',
+                ),
+                Tab(
+                  text: 'CALLS',
+                ),
+              ],
+              _tabController,
+              _getappBarHeight(context),
             ),
           ),
         ],
