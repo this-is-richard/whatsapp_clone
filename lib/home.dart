@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './tab_camera/tab_camera.dart';
 import './chat_list/chat_list.dart';
 import './select_contact.dart';
+import './call_list//call_list.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -73,16 +74,13 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
         Center(
           child: Text('Tab 3'),
         ),
-        Center(
-          child: Text('Tab 4'),
-        )
+        CallList(),
       ],
     );
   }
 
   Widget _buildFAB() {
     final tabIndex = _tabController.animation.value;
-    print(tabIndex);
 
     if (tabIndex > 0.7 && tabIndex < 1.7) {
       return FloatingActionButton(
