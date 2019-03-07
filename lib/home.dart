@@ -59,7 +59,12 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return TabBarView(
       controller: _tabController,
       children: <Widget>[
-        TabCamera(),
+        WillPopScope(
+          onWillPop: () {
+            _tabController.animateTo(1);
+          },
+          child: TabCamera(),
+        ),
         ChatList(),
         Center(
           child: Text('Tab 3'),
