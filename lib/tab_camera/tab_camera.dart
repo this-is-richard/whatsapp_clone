@@ -61,8 +61,8 @@ class _TabCameraState extends State<TabCamera> {
             padding: EdgeInsets.only(right: 5.0),
             width: 70.0,
             height: barHeight - vertPadding * 2,
-            child: Image.network(
-              randomImageUrl(),
+            child: Image(
+              image: randomImageUrl(),
               fit: BoxFit.cover,
             ),
           );
