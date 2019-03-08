@@ -16,10 +16,10 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder: (BuildContext context, int _) {
+      itemBuilder: (BuildContext context, int index) {
         return ChatListTile(
           Icon(Icons.person),
-          'Alice',
+          'Contact $index',
           'hi there',
           '2:53 in the afternoon',
           () => _onTileTap(context),

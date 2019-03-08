@@ -19,6 +19,7 @@ class TabCamera extends StatefulWidget {
 class _TabCameraState extends State<TabCamera> {
   CameraController controller;
   int _cameraIndex = 0;
+  bool _cameraNotAvailable = false;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -186,11 +187,31 @@ class _TabCameraState extends State<TabCamera> {
   @override
   void initState() {
     super.initState();
+    if (cameras == null || cameras.isEmpty) {
+      setState(() {
+        _cameraNotAvailable = true;
+      });
+    }
     _initCamera(_cameraIndex);
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_cameraNotAvailable) {
+      final center = Center(
+        child: Text('Camera not available /_\\'),
+      );
+
+      if (widget.needScaffold) {
+        return Scaffold(
+          appBar: AppBar(),
+          body: center,
+        );
+      }
+
+      return center;
+    }
+
     final stack = Stack(
       children: <Widget>[
         Container(
