@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../chat_list/chat_room.dart';
 
 class SelectContact extends StatelessWidget {
   @override
@@ -25,6 +26,12 @@ class SelectContact extends StatelessWidget {
             ),
             title: Text('contact $index'),
             subtitle: Text('contact $index\'s status...'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return ChatRoom();
+              }));
+            },
           );
         },
       ),
