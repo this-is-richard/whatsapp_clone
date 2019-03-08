@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import './tab_camera/tab_camera.dart';
-import './chat_list/chat_list.dart';
-import './select_contact.dart';
-import './call_list//call_list.dart';
+import '../tab_camera/tab_camera.dart';
+import '../chat_list/chat_list.dart';
+import './build_floating_action_button.dart';
+import '../call_list/call_list.dart';
 import './custom_app_bar.dart';
 
 class Home extends StatefulWidget {
@@ -14,6 +14,20 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   double _appBarTop = 0.0;
   TabController _tabController;
 
+  final _tabs = <Widget>[
+    Tab(
+      icon: Icon(Icons.camera_alt),
+    ),
+    Tab(
+      text: 'CHATS',
+    ),
+    Tab(
+      text: 'STATUS',
+    ),
+    Tab(
+      text: 'CALLS',
+    ),
+  ];
   final int _cameraTapIndex = 0;
 
   double _getappBarHeight(BuildContext context) {
@@ -47,42 +61,6 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     );
   }
 
-  Widget _buildFAB() {
-    final tabIndex = _tabController.animation.value;
-
-    if (tabIndex > 0.7 && tabIndex < 1.7) {
-      return FloatingActionButton(
-        onPressed: () {
-          Navigator.of(context).push(MaterialPageRoute(builder: (_) {
-            return SelectContact();
-          }));
-        },
-        child: Icon(
-          Icons.message,
-          color: Colors.white,
-        ),
-      );
-    } else if (tabIndex > 1.7 && tabIndex < 2.7) {
-      return FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
-          Icons.camera_alt,
-          color: Colors.white,
-        ),
-      );
-    } else if (tabIndex > 2.7) {
-      return FloatingActionButton(
-        onPressed: () {},
-        child: Icon(
-          Icons.add_call,
-          color: Colors.white,
-        ),
-      );
-    }
-
-    return null;
-  }
-
   _handleAppBarAnimation() {
     // This animation calculation will only work if camera tab index == 0
     if (_tabController.animation.value <= 1.0 && _cameraTapIndex == 0) {
@@ -102,7 +80,11 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(vsync: this, length: 4, initialIndex: 1);
+    _tabController = TabController(
+      vsync: this,
+      length: _tabs.length,
+      initialIndex: 1,
+    );
     _tabController.animation.addListener(_handleAppBarAnimation);
     _tabController.animation.addListener(_handleTabIndex);
   }
@@ -135,30 +117,38 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             left: 0.0,
             right: 0.0,
             top: _appBarTop,
-            child: CustomAppBar(
+            child: buildCustomAppBar(
               context,
               'WhatsApp',
-              <Widget>[
-                Tab(
-                  icon: Icon(Icons.camera_alt),
-                ),
-                Tab(
-                  text: 'CHATS',
-                ),
-                Tab(
-                  text: 'STATUS',
-                ),
-                Tab(
-                  text: 'CALLS',
-                ),
-              ],
+              _tabs,
               _tabController,
               _getappBarHeight(context),
             ),
           ),
         ],
       ),
-      floatingActionButton: _buildFAB(),
+      floatingActionButton: buildFloatingActionButton(
+        context,
+        _tabController,
+      ),
     );
   }
+}
+
+bool getIsTabCamera(TabController tabController) {
+  return tabController.animation.value < 0.7;
+}
+
+bool getIsChatList(TabController tabController) {
+  return tabController.animation.value > 0.7 &&
+      tabController.animation.value < 1.7;
+}
+
+bool getIsStatusList(TabController tabController) {
+  return tabController.animation.value > 1.7 &&
+      tabController.animation.value < 2.7;
+}
+
+bool getIsCallList(TabController tabController) {
+  return tabController.animation.value > 2.7;
 }
