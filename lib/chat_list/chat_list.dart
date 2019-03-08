@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import './chat_list_tile.dart';
 import './chat_room.dart';
+import '../home/home.dart';
 
 class ChatList extends StatelessWidget {
   _onTileTap(BuildContext context) {
@@ -22,7 +23,7 @@ class ChatList extends StatelessWidget {
           'hi there',
           '2:53 in the afternoon',
           () => _onTileTap(context),
-          avatarRadius: 25.0,
+          avatarRadius: listLeadingAvatarRadius,
         );
       },
     );

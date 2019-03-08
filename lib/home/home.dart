@@ -4,6 +4,7 @@ import '../chat_list/chat_list.dart';
 import './build_floating_action_button.dart';
 import '../call_list/call_list.dart';
 import './custom_app_bar.dart';
+import '../status_list/status_list.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -53,9 +54,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
           child: TabCamera(),
         ),
         ChatList(),
-        Center(
-          child: Text('Tab 3'),
-        ),
+        StatusList(),
         CallList(),
       ],
     );
@@ -152,3 +151,5 @@ bool getIsStatusList(TabController tabController) {
 bool getIsCallList(TabController tabController) {
   return tabController.animation.value > 2.7;
 }
+
+const listLeadingAvatarRadius = 25.0;
