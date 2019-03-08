@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './select_contact.dart';
 import '../tab_camera/tab_camera.dart';
 import './home.dart';
+import '../call_list/select_call_contact.dart';
 
 buildFloatingActionButton(BuildContext context, TabController tabController) {
   if (getIsChatList(tabController)) {
@@ -30,7 +31,11 @@ buildFloatingActionButton(BuildContext context, TabController tabController) {
     );
   } else if (getIsCallList(tabController)) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+          return SelectCallContact();
+        }));
+      },
       child: Icon(
         Icons.add_call,
       ),
