@@ -8,6 +8,10 @@ import '../main.dart';
 import '../random_image_url.dart';
 
 class TabCamera extends StatefulWidget {
+  final bool needScaffold;
+
+  TabCamera({this.needScaffold = false});
+
   @override
   _TabCameraState createState() => _TabCameraState();
 }
@@ -187,7 +191,7 @@ class _TabCameraState extends State<TabCamera> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    final stack = Stack(
       children: <Widget>[
         Container(
           color: Colors.black,
@@ -219,6 +223,14 @@ class _TabCameraState extends State<TabCamera> {
         )
       ],
     );
+
+    if (widget.needScaffold) {
+      return Scaffold(
+        body: stack,
+      );
+    }
+
+    return stack;
   }
 
   @override

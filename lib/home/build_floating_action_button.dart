@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './select_contact.dart';
+import '../tab_camera/tab_camera.dart';
 import './home.dart';
 
 buildFloatingActionButton(BuildContext context, TabController tabController) {
@@ -16,7 +17,13 @@ buildFloatingActionButton(BuildContext context, TabController tabController) {
     );
   } else if (getIsStatusList(tabController)) {
     return FloatingActionButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+          return TabCamera(
+            needScaffold: true,
+          );
+        }));
+      },
       child: Icon(
         Icons.camera_alt,
       ),
