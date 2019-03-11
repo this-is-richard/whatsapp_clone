@@ -4,7 +4,7 @@ import './chat_room.dart';
 final _chatData = List<Map<String, Object>>.generate(10, (int index) {
   return {
     'avatar': Icon(Icons.person),
-    'name': 'Alice',
+    'name': 'Contact $index',
     'lastMessage': 'hi there',
     'lastSeen': '2:53 in the afternoon',
   };
